@@ -5,12 +5,12 @@ const {
     httpAbortLaunch,
 } = require('../../models/launches.model');
 
-function getAllLaunches(req, res) {
-    const launches = httpGetAllLaunches();
+async function getAllLaunches(req, res) {
+    const launches = await httpGetAllLaunches();
     return res.status(200).json(launches);
 }
 
-function putNewLaunch(req, res) {
+async function putNewLaunch(req, res) {
     const newLaunch = req.body;
 
     //Input Validation
@@ -32,7 +32,7 @@ function putNewLaunch(req, res) {
         });
     }
 
-    const response = httpPutLaunch(newLaunch);
+    const response = await httpPutLaunch(newLaunch);
     return res.status(201).json(response);
 }
 

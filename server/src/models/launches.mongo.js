@@ -14,7 +14,7 @@ const launchesSchema = new mongoose.Schema({
         required: true,
     },
     launchDate: {
-        type: String,
+        type: Date,
         required: true,
     },
     target: {
@@ -35,4 +35,4 @@ const launchesSchema = new mongoose.Schema({
 });
 
 //Connects launchesSchema to the 'launches' collection of our db
-modules.export = mongoose.model('Launch', launchesSchema);
+module.exports = mongoose.model('Launch', launchesSchema);

@@ -53,14 +53,19 @@ function loadPlanets() {
             .on('end', async () => {
                 const countPlanetsFound = (await httpGetAllPlanets()).length;
                 console.log(`${countPlanetsFound} habitable planets found`);
-                console.log('END');
                 resolve();
             });
     });
 }
 
 const httpGetAllPlanets = async () => {
-    return await planets.find({});
+    return await planets.find(
+        {},
+        {
+            __id: 0,
+            __v: 0,
+        }
+    );
 };
 
 module.exports = {
