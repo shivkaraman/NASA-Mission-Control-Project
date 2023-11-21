@@ -1,26 +1,13 @@
 const http = require('http');
 const app = require('./app');
-const mongoose = require('mongoose');
+const { connectToDB } = require('./services/mongo');
 const { loadPlanets } = require('./models/planets.model');
 
 const PORT = process.env.PORT || 8000;
-const MONGO_URL =
-    'mongodb+srv://nasa-api:cCKTHMdtgT70kXpy@nasacluster.k3yzyat.mongodb.net/';
 const server = http.createServer(app);
 
-mongoose.connection.once('open', () => {
-    console.log('MongoDB connection ready!!');
-});
-
-mongoose.connection.on('error', (err) => {
-    console.error(`Could not connect to database : ${err}`);
-});
-
 async function startServer() {
-    await mongoose.connect(MONGO_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    await connectToDB();
     await loadPlanets();
 
     server.listen(PORT, () => {
