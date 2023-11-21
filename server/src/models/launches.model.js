@@ -1,7 +1,7 @@
 const launches = require('./launches.mongo');
 const planets = require('./planets.mongo');
 
-let flightNumber = 100;
+const DEFAULT_FLIGHT_NUMBER = 100;
 
 const firstLaunch = {
     flightNumber: 100,
@@ -15,6 +15,12 @@ const firstLaunch = {
 };
 
 saveLaunch(firstLaunch);
+
+async function getLatestFlightNumber() {
+    const latestLaunch = await launches.findOne().sort('-flightNumber');
+    if (!latestLaunch) return DEFAULT_FLIGHT_NUMBER;
+    return latestLaunch.flightNumber;
+}
 
 async function saveLaunch(launch) {
     //Checking if the target exoplanet for the launch is valid
@@ -53,10 +59,10 @@ async function httpGetAllLaunches() {
 }
 
 async function httpPutLaunch(launch) {
-    flightNumber++;
+    const newFlightNo = (await getLatestFlightNumber()) + 1;
     const newLaunch = {
         ...launch,
-        flightNumber: flightNumber,
+        flightNumber: newFlightNo,
         customer: ['Shiv', 'NASA'],
         upcoming: true,
         success: true,
