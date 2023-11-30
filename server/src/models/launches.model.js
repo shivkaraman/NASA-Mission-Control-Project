@@ -31,10 +31,6 @@ const firstLaunch = {
 
 saveLaunch(firstLaunch);
 
-async function findLaunch(filter) {
-    return await launches.findOne(filter);
-}
-
 async function populateLaunches() {
     console.log('Downloading launches data from SpaceX API');
     const response = await axios.post(SPACEX_API_URL, {
@@ -90,14 +86,13 @@ async function populateLaunches() {
 
 async function loadLaunchesData() {
     //Populating the launches from spacex api only once
-    const firstSpacexLaunch = await findLaunch({
+    const firstSpacexLaunch = await launches.findOne({
         flightNumber: 1,
         rocket: 'Falcon 1',
-        mission: 'Falcon Sat',
+        mission: 'FalconSat',
     });
 
     if (firstSpacexLaunch) {
-        console.log(firstSpacexLaunch);
         console.log('Launches already loaded to database');
         return;
     }
@@ -135,7 +130,9 @@ async function httpGetAllLaunches() {
             __v: 0,
         }
     );
-    return Array.from(launchesArray);
+    return Array.from(launchesArray).sort((a, b) => {
+        return a.flightNumber - b.flightNumber;
+    });
 }
 
 async function httpPutLaunch(launch) {
